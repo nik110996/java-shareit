@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component("inMemoryItemStorage")
-public class inMemoryItemStorage implements ItemStorage {
+@Component("InMemoryItemStorage")
+public class InMemoryItemStorage implements ItemStorage {
     private final Map<Long, Item> items = new HashMap<>();
     private long idCounter = 0;
 
