@@ -21,6 +21,5 @@ public class Item implements Serializable {
     private String description;
     private boolean available;
     private User owner;
-    @JsonIgnore
     private ItemRequest request;
 }
