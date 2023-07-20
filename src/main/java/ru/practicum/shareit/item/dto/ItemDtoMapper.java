@@ -10,8 +10,7 @@ public class ItemDtoMapper {
                 item.getName(),
                 item.getDescription(),
                 item.isAvailable(),
-                item.getOwner(),
-                item.getRequest() != null ? item.getRequest().getId() : null
+                item.getOwner()
         );
     }
 }
