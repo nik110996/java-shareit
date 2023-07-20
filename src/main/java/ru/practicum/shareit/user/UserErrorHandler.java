@@ -19,7 +19,11 @@ public class UserErrorHandler {
     public Map<String, String> handleUserNotFound(final UserNotFoundException e) {
         return Map.of("Ошибка /users", e.getMessage());
     }
-
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleUserNotFound(final ValidationException e) {
+        return Map.of("Ошибка /users", e.getMessage());
+    }
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleUserNotFound(final ValidationException e) {
