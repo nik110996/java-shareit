@@ -3,10 +3,12 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.UserRequestDto;
+import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.service.UserService;
+
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * TODO Sprint add-controllers.
@@ -19,25 +21,25 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserResponseDto> getUsers() {
         log.info("Пришел запрос / эндпоинт: '{} {}'", "GET", "/users");
-        List<User> usersList = service.getUsers();
+        List<UserResponseDto> usersList = service.getUsers();
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "GET", "/users", usersList);
         return usersList;
     }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) {
+    public UserResponseDto createUser(@Valid @RequestBody UserRequestDto user) {
         log.info("Пришел запрос / эндпоинт: '{} {}' с телом '{}", "POST", "/users", user);
-        User savedUser = service.createUser(user);
+        UserResponseDto savedUser = service.createUser(user);
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "POST", "/users", savedUser);
         return savedUser;
     }
 
     @PatchMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody Map<String, Object> fields) {
-        log.info("Пришел запрос / эндпоинт: '{} {}' с телом '{}", "PATCH", "/users" + id, fields);
-        User updatedUser = service.updateUser(id, fields);
+    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto userDto) {
+        log.info("Пришел запрос / эндпоинт: '{} {}' с телом '{}", "PATCH", "/users" + id, userDto);
+        UserResponseDto updatedUser = service.updateUser(userDto, id);
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "PATCH", "/users" + id, updatedUser);
         return updatedUser;
     }
@@ -57,9 +59,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable long id) {
+    public UserResponseDto getUser(@PathVariable long id) {
         log.info("Получен запрос / эндпоинт: '{} {}'", "GET", "/users/" + id);
-        User user = service.getUser(id);
+        UserResponseDto user = service.getUser(id);
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "GET", "/users/" + id, user);
         return user;
     }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.exceptions.ValidationException;
-
 import java.util.Map;
 
 @RestControllerAdvice("ru.practicum.shareit.item")

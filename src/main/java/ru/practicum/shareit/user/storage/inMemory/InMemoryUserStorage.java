@@ -1,13 +1,11 @@
 package ru.practicum.shareit.user.storage.inMemory;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
-import ru.practicum.shareit.Validator;
 import ru.practicum.shareit.exceptions.ValidationException;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.interfaces.UserStorage;
-import java.lang.reflect.Field;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +23,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
+        checkEmailDoubling(user);
         idCounter++;
         user.setId(idCounter);
         users.put(idCounter, user);
@@ -32,19 +31,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User updateUser(Long id, Map<String, Object> fields) {
-        if (users.get(id) != null) {
-            User userCopy = SerializationUtils.clone(users.get(id));
-            fields.forEach((key, value) -> {
-                Field field = ReflectionUtils.findField(User.class, key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, userCopy, value);
-            });
-            Validator.validationUserCheck(userCopy, users);
-            users.put(id, userCopy);
-            return userCopy;
-        }
-        throw new ValidationException("User с таким id не существует");
+    public void updateUser(User user) {
+        checkEmailDoubling(user);
+        users.put(user.getId(), user);
     }
 
     @Override
@@ -60,5 +49,14 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void deleteUser(Long id) {
         users.remove(id);
+    }
+
+    private void checkEmailDoubling(User user) {
+        List<User> oldUsers = new ArrayList<>(users.values());
+        oldUsers.forEach(oldUser -> {
+            if (user.getEmail().equals(oldUser.getEmail()) && user.getId() != oldUser.getId()) {
+                throw new ValidationException("Email уже зарегистрирован в системе");
+            }
+        });
     }
 }

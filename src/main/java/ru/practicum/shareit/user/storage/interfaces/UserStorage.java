@@ -1,15 +1,15 @@
 package ru.practicum.shareit.user.storage.interfaces;
 
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
+
 import java.util.List;
-import java.util.Map;
 
 public interface UserStorage {
     List<User> getUsers();
 
     User createUser(User user);
 
-    User updateUser(Long id, Map<String, Object> fields);
+    void updateUser(User user);
 
     User findUserById(long id);
 

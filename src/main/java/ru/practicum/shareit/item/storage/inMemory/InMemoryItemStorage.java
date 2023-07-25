@@ -1,15 +1,11 @@
 package ru.practicum.shareit.item.storage.inMemory;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
 import ru.practicum.shareit.exceptions.ItemNotFoundException;
-import ru.practicum.shareit.exceptions.ValidationException;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.interfaces.ItemStorage;
-import ru.practicum.shareit.user.User;
-import java.lang.reflect.Field;
+import ru.practicum.shareit.user.model.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,42 +17,30 @@ public class InMemoryItemStorage implements ItemStorage {
     private long idCounter = 0;
 
     @Override
-    public ItemDto createItem(Item item, User user) {
+    public Item createItem(Item item, User user) {
         idCounter++;
         item.setId(idCounter);
         item.setOwner(user);
         items.put(idCounter, item);
-        return ItemDtoMapper.toItemDto(item);
+        return item;
     }
 
     @Override
-    public ItemDto updateItem(Long id, Map<String, Object> fields) {
-        if (items.get(id) != null) {
-            Item item = items.get(id);
-            fields.forEach((key, value) -> {
-                Field field = ReflectionUtils.findField(Item.class, key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, item, value);
-            });
-            return ItemDtoMapper.toItemDto(item);
-        }
-        throw new ValidationException("Item с таким id не существует");
+    public void updateItem(Item item) {
+        items.put(item.getId(), item);
     }
 
     @Override
-    public ItemDto getItem(Long itemId) {
-        return ItemDtoMapper.toItemDto(items.get(itemId));
+    public Item getItem(Long itemId) {
+        return items.get(itemId);
     }
 
     @Override
-    public List<ItemDto> getItemsBySearch(String text) {
-        List<ItemDto> matches = new ArrayList<>();
-        if (text.isBlank()) {
-            return matches;
-        }
+    public List<Item> getItemsBySearch(String text) {
+        List<Item> matches = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getDescription().toLowerCase().contains(text.toLowerCase()) && item.isAvailable()) {
-                matches.add(ItemDtoMapper.toItemDto(item));
+            if (item.getDescription().toLowerCase().contains(text.toLowerCase()) && item.getAvailable()) {
+                matches.add(item);
             }
         }
         if (matches.isEmpty()) {
@@ -66,13 +50,13 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public List<ItemDto> getAllItems(User user) {
-        List<ItemDto> itemDtoList = new ArrayList<>();
+    public List<Item> getAllItems(User user) {
+        List<Item> itemsList = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getOwner() == user) {
-                itemDtoList.add(ItemDtoMapper.toItemDto(item));
+            if (item.getOwner().equals(user)) {
+                itemsList.add(item);
             }
         }
-        return itemDtoList;
+        return itemsList;
     }
 }

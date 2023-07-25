@@ -1,16 +1,14 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
+import lombok.Builder;
 import lombok.Data;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
-/**
- * TODO Sprint add-controllers.
- */
-
+@Builder
 @Data
-public class User implements Serializable {
+public class UserResponseDto {
     private long id;
     private String name;
     @NotBlank(message = "Пустая электронная почта")
