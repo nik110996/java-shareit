@@ -14,14 +14,10 @@ import java.util.Map;
 @Component("InMemoryItemStorage")
 public class InMemoryItemStorage implements ItemStorage {
     private final Map<Long, Item> items = new HashMap<>();
-    private long idCounter = 0;
 
     @Override
     public Item createItem(Item item, User user) {
-        idCounter++;
-        item.setId(idCounter);
-        item.setOwner(user);
-        items.put(idCounter, item);
+        items.put(item.getId(), item);
         return item;
     }
 

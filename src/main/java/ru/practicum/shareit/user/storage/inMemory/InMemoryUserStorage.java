@@ -14,7 +14,6 @@ import java.util.Map;
 public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Long, User> users = new HashMap<>();
-    private long idCounter = 0;
 
     @Override
     public List<User> getUsers() {
@@ -24,9 +23,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User createUser(User user) {
         checkEmailDoubling(user);
-        idCounter++;
-        user.setId(idCounter);
-        users.put(idCounter, user);
+        users.put(user.getId(), user);
         return user;
     }
 

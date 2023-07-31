@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.service;
+package ru.practicum.shareit.item.service.implementation;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.SerializationUtils;
@@ -9,6 +9,7 @@ import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.service.interfaces.ItemService;
 import ru.practicum.shareit.item.storage.interfaces.ItemStorage;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.interfaces.UserStorage;
@@ -20,19 +21,25 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ItemService {
-
+public class ItemServiceLocalImp implements ItemService {
+    private long idCounter = 0;
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
 
+    @Override
     public ItemDto createItem(Item item, Long userId) {
-        checkUserExisting(userStorage.findUserById(userId));
+        User user = userStorage.findUserById(userId);
+        checkUserExisting(user);
         if (!item.getAvailable()) {
             throw new ValidationException("Item должен быть доступен");
         }
-        return ItemDtoMapper.toItemDto(itemStorage.createItem(item, userStorage.findUserById(userId)));
+        idCounter++;
+        item.setId(idCounter);
+        item.setOwner(user);
+        return ItemDtoMapper.toItemDto(itemStorage.createItem(item, user));
     }
 
+    @Override
     public ItemDto updateItem(Long id, ItemDto itemDto, Long userId) {
         checkUserExisting(userStorage.findUserById(userId));
         Item item = SerializationUtils.clone(itemStorage.getItem(id));
@@ -52,12 +59,13 @@ public class ItemService {
         return ItemDtoMapper.toItemDto(item);
     }
 
-
+    @Override
     public ItemDto getItem(Long itemId, Long userId) {
         checkUserExisting(userStorage.findUserById(userId));
         return ItemDtoMapper.toItemDto(itemStorage.getItem(itemId));
     }
 
+    @Override
     public List<ItemDto> getItemBySearch(String text, Long userId) {
         checkUserExisting(userStorage.findUserById(userId));
         if (text == null || text.isBlank()) {
@@ -68,6 +76,7 @@ public class ItemService {
         return itemDtoList;
     }
 
+    @Override
     public List<ItemDto> getAllItems(Long userId) {
         User user = userStorage.findUserById(userId);
         checkUserExisting(user);
