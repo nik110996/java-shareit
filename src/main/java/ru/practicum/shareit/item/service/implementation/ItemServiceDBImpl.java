@@ -133,8 +133,8 @@ public class ItemServiceDBImpl implements ItemService {
                             item.getId(), Status.APPROVED, LocalDateTime.now())
                     .map(BookingDtoMapper::toBookingDtoForItem)
                     .orElse(null);
-            BookingDtoForItem nextBooking = bookingRepository.
-                    findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(
+            BookingDtoForItem nextBooking = bookingRepository
+                    .findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(
                             item.getId(), Status.APPROVED, LocalDateTime.now())
                     .map(BookingDtoMapper::toBookingDtoForItem)
                     .orElse(null);
