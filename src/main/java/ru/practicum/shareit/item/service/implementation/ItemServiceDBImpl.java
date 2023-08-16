@@ -53,8 +53,6 @@ public class ItemServiceDBImpl implements ItemService {
         bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, LocalDateTime.now())
                 .orElseThrow(() -> new ValidationException("поользоватль с id = "
                         + userId + " не арендовал предмет с id = " + itemId));
-        System.out.println("SAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println(item);
         Comment newComment = CommentDtoMapper.toComment(comment, item, author);
         newComment.setItem(item);
         newComment.setAuthor(author);
@@ -132,11 +130,13 @@ public class ItemServiceDBImpl implements ItemService {
         return items.stream().map(item -> {
             BookingDtoForItem lastBooking = bookingRepository
                     .findFirstByItemIdAndStatusAndStartBeforeOrderByEndDesc(
-                            item.getId(), Status.APPROVED, LocalDateTime.now()).map(BookingDtoMapper::toBookingDtoForItem)
+                            item.getId(), Status.APPROVED, LocalDateTime.now())
+                    .map(BookingDtoMapper::toBookingDtoForItem)
                     .orElse(null);
             BookingDtoForItem nextBooking = bookingRepository.
                     findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(
-                            item.getId(), Status.APPROVED, LocalDateTime.now()).map(BookingDtoMapper::toBookingDtoForItem)
+                            item.getId(), Status.APPROVED, LocalDateTime.now())
+                    .map(BookingDtoMapper::toBookingDtoForItem)
                     .orElse(null);
             List<CommentDto> comments = commentRepository.findByItem(item).stream().map(CommentDtoMapper::toCommentDto)
                     .collect(Collectors.toList());
