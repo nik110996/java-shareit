@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,7 @@ public class User implements Serializable {
     private String name;
     @NotBlank(message = "Пустая электронная почта")
     @Email(message = "Некорректная почта")
-    @Column
+    @Column(length = 512, unique = true)
+    @NotBlank
     private String email;
 }

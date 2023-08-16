@@ -23,14 +23,6 @@ public class UserDtoMapper {
         );
     }
 
-    public static UserResponseDto toUserResponseDto(UserRequestDto user) {
-        return new UserResponseDto(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
-    }
-
     public static List<UserResponseDto> toUserResponseDto(List<User> users) {
         List<UserResponseDto> responseDtos = new ArrayList<>();
         users.forEach(user -> responseDtos.add(toUserResponseDto(user)));

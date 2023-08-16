@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDtoMapper;
 import ru.practicum.shareit.user.dto.UserRequestDto;
@@ -11,7 +12,7 @@ import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.interfaces.UserService;
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 @Primary
@@ -34,6 +35,7 @@ public class UserServiceDBImp implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDto createUser(UserRequestDto userDto) {
         User user = UserDtoMapper.toUser(userDto);
         return UserDtoMapper.toUserResponseDto(repository.save(user));

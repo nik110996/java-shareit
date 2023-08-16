@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.service.implemintation;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.SerializationUtils;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
@@ -12,9 +11,9 @@ import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.interfaces.UserService;
 import ru.practicum.shareit.user.storage.interfaces.UserStorage;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Component("userServiceLocalImp")
 @Service
