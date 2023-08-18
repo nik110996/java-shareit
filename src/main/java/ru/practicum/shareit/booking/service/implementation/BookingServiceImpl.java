@@ -3,8 +3,9 @@ package ru.practicum.shareit.booking.service.implementation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.State;
-import ru.practicum.shareit.booking.Status;
+import ru.practicum.shareit.booking.dto.BookingDtoRequest;
+import ru.practicum.shareit.booking.enums.State;
+import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -19,7 +20,6 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.interfaces.UserService;
-
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto createBooking(Long userId, BookingDto booking) {
+    public BookingDto createBooking(Long userId, BookingDtoRequest booking) {
         if (booking.getEnd().isBefore(booking.getStart()) ||
                 booking.getStart().equals(booking.getEnd())) {
             throw new ValidationException("Даты начала и конца бронирования не корректны");
@@ -53,11 +53,7 @@ public class BookingServiceImpl implements BookingService {
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
-        System.out.println(user);
-        Booking newBooking = BookingDtoMapper.toBooking(booking);
-        newBooking.setItem(item);
-        newBooking.setBooker(user);
-        newBooking.setStatus(Status.WAITING);
+        Booking newBooking = BookingDtoMapper.toBooking(booking, item, user, Status.WAITING);
         return BookingDtoMapper.toBookingDto(bookingRepository.save(newBooking));
     }
 

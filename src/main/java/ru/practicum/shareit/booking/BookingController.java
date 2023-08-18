@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.service.interfaces.BookingService;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                    @Valid @RequestBody BookingDto booking) {
+                                    @Valid @RequestBody BookingDtoRequest booking) {
         log.info("Пришел запрос / эндпоинт: '{} {} с телом {} и с заголовком {}'",
                 "POST", "/bookings", booking, userId);
         BookingDto bookingDto = bookingService.createBooking(userId, booking);
