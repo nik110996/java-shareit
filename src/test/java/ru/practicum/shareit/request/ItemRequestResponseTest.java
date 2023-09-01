@@ -30,7 +30,7 @@ public class ItemRequestResponseTest {
 
     @SneakyThrows
     @Test
-    void RequestDtoResponseTest() {
+    void requestDtoResponseTest() {
         ItemRequestDtoResponse itemRequestDto = ItemRequestDtoResponse.builder()
                 .created(LocalDateTime.parse("2023-07-20T22:14:51.188116511").minusHours(1))
                 .description("desc")

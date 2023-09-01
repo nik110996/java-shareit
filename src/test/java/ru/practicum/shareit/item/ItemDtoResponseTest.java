@@ -14,7 +14,7 @@ public class ItemDtoResponseTest {
 
     @SneakyThrows
     @Test
-    void ItemDtoResponseTestCreationTest() {
+    void itemDtoResponseTestCreationTest() {
         ItemDtoResponse itemCreateDto = ItemDtoResponse.builder()
                 .name("name")
                 .description("desc")

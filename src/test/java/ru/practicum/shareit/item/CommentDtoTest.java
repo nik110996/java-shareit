@@ -31,7 +31,7 @@ public class CommentDtoTest {
 
     @SneakyThrows
     @Test
-    void CommentDtoOutTest() {
+    void commentDtoOutTest() {
         CommentDto commentDto = CommentDto.builder()
                 .id(0L)
                 .text("text")
