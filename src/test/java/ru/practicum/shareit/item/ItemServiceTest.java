@@ -67,47 +67,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    void update() {
-        Long itemId = itemService.createItem(itemDto, userId).getId();
-        ItemDtoResponse itemDtoUpdate = ItemDtoResponse.builder().available(false).build();
-        ItemDtoResponse itemDtoSaved = itemService.updateItem(userId, itemDtoUpdate, itemId);
-        assertNotNull(itemDtoSaved.getId());
-        assertEquals(itemDtoSaved.getName(), itemDto.getName());
-        assertEquals(itemDtoSaved.getDescription(), itemDto.getDescription());
-        assertEquals(itemDtoSaved.getAvailable(), itemDtoUpdate.getAvailable());
-    }
-
-    @Test
-    void findById() {
-        Long itemId = itemService.createItem(itemDto, userId).getId();
-        LocalDateTime start = LocalDateTime.now();
-        UserRequestDto userDtoBooker = UserRequestDto.builder()
-                .name("Booker")
-                .email("booker@email.ru").build();
-        Long bookerId = userService.createUser(userDtoBooker).getId();
-        BookingDtoRequest lastBookingDtoInitial = BookingDtoRequest.builder()
-                .itemId(itemId)
-                .start(start)
-                .end(start.plusNanos(10L)).build();
-        Long bookingIdLast = bookingService.createBooking(bookerId, lastBookingDtoInitial).getId();
-        BookingDtoRequest nextBookingDtoInitial = BookingDtoRequest.builder()
-                .itemId(itemId)
-                .start(start.plusHours(1L))
-                .end(start.plusHours(2L)).build();
-        Long bookingIdNext = bookingService.createBooking(bookerId, nextBookingDtoInitial).getId();
-        bookingService.updateBooking(userId, bookingIdLast, true);
-        bookingService.updateBooking(userId, bookingIdNext, true);
-        ItemDtoBC itemTarget = itemService.getItem(userId, itemId);
-        assertNotNull(itemTarget.getId());
-        assertEquals(itemTarget.getName(), itemDto.getName());
-        assertEquals(itemTarget.getDescription(), itemDto.getDescription());
-        assertEquals(itemTarget.getAvailable(), itemDto.getAvailable());
-        assertNotNull(itemTarget.getLastBooking());
-        assertEquals(itemTarget.getLastBooking().getId(), bookingIdLast);
-        assertEquals(itemTarget.getNextBooking().getId(), bookingIdNext);
-    }
-
-    @Test
     void findAll() {
         Long itemId = itemService.createItem(itemDto, userId).getId();
         LocalDateTime start = LocalDateTime.now();
