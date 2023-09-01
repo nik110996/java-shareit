@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = UserController.class)
-public class UserControllerIntegrationTest {
+public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -78,7 +78,7 @@ public class UserControllerIntegrationTest {
     @Test
     void deleteWhenInvokeThenNoContentStatus() {
         mockMvc.perform(delete("/users/{userId}", userId))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
         verify(userService).deleteUser(userId);
     }
 

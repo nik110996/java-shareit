@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class UserServiceIntegrationTest {
+public class UserServiceTest {
     private final EntityManager entityManager;
     private final UserService userService;
 
