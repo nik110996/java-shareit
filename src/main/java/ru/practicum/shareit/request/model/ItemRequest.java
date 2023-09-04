@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 @Builder
 @Table(name = "requests")
-@ToString
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +23,7 @@ public class ItemRequest {
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
+    @ToString.Exclude
     private User requester;
     @OneToMany(mappedBy = "itemRequest", fetch = FetchType.EAGER)
     private List<Item> items;
