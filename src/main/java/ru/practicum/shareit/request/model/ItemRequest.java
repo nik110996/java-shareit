@@ -25,7 +25,8 @@ public class ItemRequest {
     @JoinColumn(name = "requester_id")
     @ToString.Exclude
     private User requester;
-    @OneToMany(mappedBy = "itemRequest", fetch = FetchType.EAGER)
-    private List<Item> items;
     private LocalDateTime created;
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "request")
+    private List<Item> items;
 }
