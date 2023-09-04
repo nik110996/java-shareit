@@ -31,7 +31,8 @@ public class Item implements Serializable {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id")
+    @ToString.Exclude
     private ItemRequest itemRequest;
 }
