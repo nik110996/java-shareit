@@ -23,7 +23,6 @@ public class ItemRequest {
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
-    @ToString.Exclude
     private User requester;
     @OneToMany(mappedBy = "itemRequest", fetch = FetchType.EAGER)
     private List<Item> items;

@@ -75,7 +75,7 @@ public class ItemServiceDBImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDtoResponse updateItem(Long id, ItemDtoResponse itemDto, Long userId) {
+    public ItemDtoResponse updateItem(long id, ItemDtoResponse itemDto, long userId) {
         userService.getUser(userId);
         Item item = findItemOrThrowException(id);
         if (item == null || item.getOwner().getId() != userId) {
