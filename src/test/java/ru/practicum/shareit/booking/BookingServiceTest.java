@@ -1,14 +1,11 @@
 package ru.practicum.shareit.booking;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
@@ -26,25 +23,17 @@ import ru.practicum.shareit.item.service.implementation.ItemServiceDBImpl;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dto.UserDtoMapper;
 import ru.practicum.shareit.user.dto.UserRequestDto;
-import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.implemintation.UserServiceDBImp;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 
 @ExtendWith(MockitoExtension.class)
@@ -62,54 +51,15 @@ public class BookingServiceTest {
     @InjectMocks
     ItemServiceDBImpl itemServiceDB;
     private BookingDtoMapper bookingDtoMapper;
-    private BookingDtoRequest bookingDtoRequest;
-    private UserRequestDto userRequestDto;
-    private Long bookerId;
-    private Long ownerId;
-    private Long userId;
-    private Long itemId;
-    private final List<User> users = new ArrayList<>();
-    private final List<Item> items = new ArrayList<>();
-    private final List<Booking> bookings = new ArrayList<>();
-    //private final EntityManager entityManager;
+
 
     @BeforeEach
     void init() {
         bookingDtoMapper = new BookingDtoMapper();
         bookingService = new BookingServiceImpl(bookingDtoMapper, bookingRepository,
                 itemRepository, userRepository, userServiceDBImp);
-
-       /* UserRequestDto userDto = UserRequestDto.builder()
-                .name("User")
-                .email("user@email.ru").build();
-        //when()
-        UserResponseDto userResponseDto = userServiceDBImp.createUser(userDto);
-        userId = userResponseDto.getId();
-        ItemDtoRequest itemDto = ItemDtoRequest.builder()
-                .name("Отвертка")
-                .description("Простая отвертка")
-                .available(true).build();
-        itemId = itemServiceDB.createItem(itemDto, userId).getId();
-
-        bookingDtoRequest = BookingDtoRequest.builder()
-                .itemId(itemId)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now().plusHours(1L)).build();
-        userRequestDto = UserRequestDto.builder()
-                .name("Booker")
-                .email("booker@mail.ru").build();
-
-        fillUserRepository(users);
-        bookerId = users.get(1).getId();
-        ownerId = users.get(0).getId();
-        fillItemRepository(users, items);
-        fillBookingRepository(users, items, bookings);*/
     }
 
-    /*@Test
-    void create() {
-
-    }*/
 
     @Test
     void createBookingNullPointerTest() throws BookingNotFoundException {
