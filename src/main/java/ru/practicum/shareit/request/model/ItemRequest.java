@@ -23,8 +23,10 @@ public class ItemRequest {
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
+    @ToString.Exclude
     private User requester;
-    @OneToMany(mappedBy = "itemRequest", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @OneToMany(mappedBy = "request", fetch = FetchType.LAZY)
     private List<Item> items;
     private LocalDateTime created;
 }

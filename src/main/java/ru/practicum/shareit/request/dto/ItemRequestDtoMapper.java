@@ -1,9 +1,11 @@
 package ru.practicum.shareit.request.dto;
 
+import ru.practicum.shareit.item.dto.ItemDtoMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class ItemRequestDtoMapper {
 
@@ -16,13 +18,15 @@ public class ItemRequestDtoMapper {
     }
 
     public static ItemRequestDtoResponse toItemRequestDtoResponse(ItemRequest itemRequest) {
-        return ItemRequestDtoResponse.builder()
-                .id(itemRequest.getId())
-                .description(itemRequest.getDescription())
-                .requester(itemRequest.getRequester())
-                .items(itemRequest.getItems())
-                .created(itemRequest.getCreated())
-                .build();
+        ItemRequestDtoResponse itemRequestDtoResponse = ItemRequestDtoResponse.builder().build();
+        itemRequestDtoResponse.setId(itemRequest.getId());
+        itemRequestDtoResponse.setDescription(itemRequest.getDescription());
+        if (itemRequest.getItems() != null) {
+            itemRequestDtoResponse.setItems(itemRequest.getItems().stream()
+                    .map(ItemDtoMapper::toItemDtoResponse).collect(Collectors.toList()));
+        }
+        itemRequestDtoResponse.setCreated(itemRequest.getCreated());
+        return itemRequestDtoResponse;
     }
 
     public static ItemRequestDtoRequest toItemRequestDtoRequest(ItemRequestDtoResponse itemRequestDtoResponse) {

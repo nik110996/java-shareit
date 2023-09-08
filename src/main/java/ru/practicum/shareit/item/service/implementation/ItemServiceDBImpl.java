@@ -50,7 +50,7 @@ public class ItemServiceDBImpl implements ItemService {
         Item item = ItemDtoMapper.toItem(itemDtoRequest, user);
         Long requestId = itemDtoRequest.getRequestId();
         if (requestId != null) {
-            item.setItemRequest(itemRequestRepository.findById(requestId)
+            item.setRequest(itemRequestRepository.findById(requestId)
                     .orElseThrow(() -> new ItemRequestNotFoundException("Запрос не найден")
                     ));
         }

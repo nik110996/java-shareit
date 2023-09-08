@@ -196,7 +196,7 @@ public class BookingServiceTest {
         final ItemRequest request = new ItemRequest(0L, "description", newUser, null, LocalDateTime.now());
         ItemDtoResponse itemDto = new ItemDtoResponse(1L, "TestItem", "DescriptionTest", true, request.getId());
         Item item = ItemDtoMapper.toItem(itemDto, newUser);
-        item.setItemRequest(request);
+        item.setRequest(request);
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusHours(1);
         BookingDtoResponse dto = new BookingDtoResponse(1L, itemId, start, end, itemDto, userRequestDto, Status.WAITING);
@@ -216,7 +216,7 @@ public class BookingServiceTest {
         final ItemRequest request = new ItemRequest(0L, "description", newUser, null, LocalDateTime.now());
         ItemDtoResponse itemDto = new ItemDtoResponse(1L, "TestItem", "DescriptionTest", true, request.getId());
         Item item = ItemDtoMapper.toItem(itemDto, newUser);
-        item.setItemRequest(request);
+        item.setRequest(request);
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusHours(1);
         BookingDtoResponse dto = new BookingDtoResponse(1L, itemId, start, end, itemDto, userRequestDto, Status.WAITING);
@@ -235,7 +235,7 @@ public class BookingServiceTest {
         final ItemRequest request = new ItemRequest(0L, "description", newUser, null, LocalDateTime.now());
         ItemDtoResponse itemDto = new ItemDtoResponse(1L, "TestItem", "DescriptionTest", true, request.getId());
         Item item = ItemDtoMapper.toItem(itemDto, newUser);
-        item.setItemRequest(request);
+        item.setRequest(request);
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusHours(1);
         BookingDtoResponse dto = new BookingDtoResponse(1L, itemId, start, end, itemDto, userRequestDto, Status.WAITING);
@@ -254,7 +254,7 @@ public class BookingServiceTest {
         final ItemRequest request = new ItemRequest(0L, "description", newUser, null, LocalDateTime.now());
         ItemDtoResponse itemDto = new ItemDtoResponse(1L, "TestItem", "DescriptionTest", true, request.getId());
         Item item = ItemDtoMapper.toItem(itemDto, newUser);
-        item.setItemRequest(request);
+        item.setRequest(request);
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusHours(1);
         BookingDtoResponse dto = new BookingDtoResponse(1L, itemId, start, end, itemDto, userRequestDto, Status.WAITING);

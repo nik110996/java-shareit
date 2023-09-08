@@ -14,7 +14,6 @@ import ru.practicum.shareit.request.service.interfaces.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserDtoMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.interfaces.UserService;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
+import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.ItemRequestDtoResponse;
 import java.time.LocalDateTime;
@@ -35,7 +36,7 @@ public class ItemRequestResponseTest {
                 .created(LocalDateTime.parse("2023-07-20T22:14:51.188116511").minusHours(1))
                 .description("desc")
                 .id(0L)
-                .items(List.of(Item.builder()
+                .items(List.of(ItemDtoResponse.builder()
                         .id(1L)
                         .name("item")
                         .description("description")
