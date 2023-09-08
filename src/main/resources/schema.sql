@@ -55,3 +55,4 @@ CREATE TABLE IF NOT EXISTS requests (
   CONSTRAINT fk_request_requester_id FOREIGN KEY(requester_id) REFERENCES users (id)
 );
 
+

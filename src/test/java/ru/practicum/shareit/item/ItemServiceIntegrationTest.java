@@ -2,8 +2,7 @@ package ru.practicum.shareit.item;
 
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
@@ -27,12 +26,12 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(
-        properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class ItemServiceTest {
-    private final EntityManager entityManager;
+public class ItemServiceIntegrationTest {
+    private final EntityManager em;
     private final ItemService itemService;
     private final UserService userService;
     private final BookingService bookingService;
@@ -41,8 +40,10 @@ public class ItemServiceTest {
     private ItemDtoRequest itemDto;
     private UserRequestDto userDto;
 
-    @BeforeEach
-    void beforeEach() {
+    @Test
+    @Order(1)
+    void getById() {
+        em.createNativeQuery("Drop table USER");
         userDto = UserRequestDto.builder()
                 .name("User")
                 .email("user@email.ru").build();
@@ -52,12 +53,47 @@ public class ItemServiceTest {
                 .name("Отвертка")
                 .description("Простая отвертка")
                 .available(true).build();
+        Long itemId = itemService.createItem(itemDto, userId).getId();
+        LocalDateTime start = LocalDateTime.now();
+        UserRequestDto userDtoBooker = UserRequestDto.builder()
+                .name("Booker")
+                .email("booker@email.ru").build();
+        Long bookerId = userService.createUser(userDtoBooker).getId();
+        BookingDtoRequest lastBookingDtoInitial = BookingDtoRequest.builder()
+                .itemId(itemId)
+                .start(start)
+                .end(start.plusNanos(10L)).build();
+        Long bookingIdLast = bookingService.createBooking(bookerId, lastBookingDtoInitial).getId();
+        BookingDtoRequest nextBookingDtoInitial = BookingDtoRequest.builder()
+                .itemId(itemId)
+                .start(start.plusHours(1L))
+                .end(start.plusHours(2L)).build();
+        Long bookingIdNext = bookingService.createBooking(bookerId, nextBookingDtoInitial).getId();
+        bookingService.updateBooking(userId, bookingIdLast, true);
+        bookingService.updateBooking(userId, bookingIdNext, true);
+        ItemDtoBC itemTarget = itemService.getItem(userId, itemId);
+        assertNotNull(itemTarget.getId());
+        assertEquals(itemTarget.getName(), itemDto.getName());
+        assertEquals(itemTarget.getDescription(), itemDto.getDescription());
+        assertEquals(itemTarget.getAvailable(), itemDto.getAvailable());
+        assertNotNull(itemTarget.getLastBooking());
+        assertEquals(itemTarget.getLastBooking().getId(), bookingIdLast);
+        assertEquals(itemTarget.getNextBooking().getId(), bookingIdNext);
     }
 
     @Test
-    void create() {
-        itemService.createItem(itemDto, userId);
-        TypedQuery<Item> query = entityManager.createQuery("Select i from Item i where i.name = :name", Item.class);
+    void createItem() {
+        UserRequestDto userDto = UserRequestDto.builder()
+                .name("User")
+                .email("user@email.ru").build();
+        Long userId = userService.createUser(userDto).getId();
+
+        itemDto = ItemDtoRequest.builder()
+                .name("Отвертка")
+                .description("Простая отвертка")
+                .available(true).build();
+        Long itemId = itemService.createItem(itemDto, userId).getId();
+        TypedQuery<Item> query = em.createQuery("Select i from Item i where i.name = :name", Item.class);
         Item itemSaved = query.setParameter("name", itemDto.getName()).getSingleResult();
         assertNotNull(itemSaved.getId());
         assertEquals(itemSaved.getName(), itemDto.getName());
@@ -66,8 +102,18 @@ public class ItemServiceTest {
         assertNotNull(itemSaved.getOwner());
     }
 
+
     @Test
-    void findAll() {
+    void findAllItems() {
+        userDto = UserRequestDto.builder()
+                .name("User")
+                .email("user@email.ru").build();
+        userId = userService.createUser(userDto).getId();
+
+        itemDto = ItemDtoRequest.builder()
+                .name("Отвертка")
+                .description("Простая отвертка")
+                .available(true).build();
         Long itemId = itemService.createItem(itemDto, userId).getId();
         LocalDateTime start = LocalDateTime.now();
         UserRequestDto userDtoBooker = UserRequestDto.builder()
@@ -100,7 +146,16 @@ public class ItemServiceTest {
     }
 
     @Test
-    void search() {
+    void update() {
+        userDto = UserRequestDto.builder()
+                .name("User")
+                .email("user@email.ru").build();
+        userId = userService.createUser(userDto).getId();
+
+        itemDto = ItemDtoRequest.builder()
+                .name("Отвертка")
+                .description("Простая отвертка")
+                .available(true).build();
         ItemDtoRequest itemDto1 = ItemDtoRequest.builder()
                 .name("Дрель")
                 .description("Простая дрель")
@@ -125,6 +180,15 @@ public class ItemServiceTest {
 
     @Test
     void createComment() {
+        userDto = UserRequestDto.builder()
+                .name("User")
+                .email("user@email.ru").build();
+        userId = userService.createUser(userDto).getId();
+
+        itemDto = ItemDtoRequest.builder()
+                .name("Отвертка")
+                .description("Простая отвертка")
+                .available(true).build();
         Long itemId = itemService.createItem(itemDto, userId).getId();
         UserRequestDto userDtoBooker = UserRequestDto.builder()
                 .name("Booker")
@@ -138,7 +202,7 @@ public class ItemServiceTest {
         bookingService.updateBooking(userId, bookingIdLast, true);
         CommentDto commentDto = CommentDto.builder().text("text").build();
         itemService.createComment(bookerId, itemId, commentDto);
-        TypedQuery<Comment> query = entityManager.createQuery("Select c from Comment c where c.text = :text", Comment.class);
+        TypedQuery<Comment> query = em.createQuery("Select c from Comment c where c.text = :text", Comment.class);
         Comment commentSaved = query.setParameter("text", commentDto.getText()).getSingleResult();
         assertNotNull(commentSaved.getId());
         assertEquals(commentSaved.getText(), commentDto.getText());
@@ -146,3 +210,4 @@ public class ItemServiceTest {
         assertNotNull(commentSaved.getItem());
     }
 }
+

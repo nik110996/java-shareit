@@ -83,12 +83,12 @@ public class BookingServiceIntegrationTest {
         fillUserRepository(users);
         bookerId = users.get(1).getId();
         ownerId = users.get(0).getId();
-        fillItemRepository(users, items);
-        fillBookingRepository(users, items, bookings);
+        buildItems(users, items);
+        buildBookings(users, items, bookings);
     }
 
     @Test
-    void create() {
+    void createBooking() {
         Long bookerId = userService.createUser(userDtoBooker).getId();
         Long bookingId = bookingService.createBooking(bookerId, bookingRequestDto).getId();
         TypedQuery<Booking> query = entityManager.createQuery(
@@ -104,7 +104,22 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getAllBookingsByStateCURRENTWhenInvokeBookerThenReturnListBookingDtoResponse() {
+    void updateBooking() {
+        Long bookerId = userService.createUser(userDtoBooker).getId();
+        Long bookingId = bookingService.createBooking(bookerId, bookingRequestDto).getId();
+
+        BookingDtoResponse bookingApproved = bookingService.updateBooking(userId, bookingId, true);
+
+        assertNotNull(bookingApproved);
+        assertNotNull(bookingApproved.getItem());
+        assertEquals(itemId, bookingApproved.getItem().getId());
+        assertNotNull(bookingApproved.getBooker());
+        assertEquals(bookerId, bookingApproved.getBooker().getId());
+        assertEquals(Status.APPROVED, bookingApproved.getStatus());
+    }
+
+    @Test
+    void getAllBookingsByStateCURRENT() {
         List<BookingDtoResponse> resultBookings = bookingService.getBookingByState(bookerId,
                 "CURRENT",
                 0,
@@ -114,7 +129,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getAllBookingsByStateFUTUREWhenInvokeBookerThenReturnListBookingDto() {
+    void getAllBookingsByStateFUTURE() {
         List<BookingDtoResponse> resultBookings = bookingService.getBookingByState(bookerId,
                 "FUTURE",
                 0,
@@ -126,7 +141,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getAllBookingsByStatePASTWhenInvokeBookerThenReturnListBookingDto() {
+    void getAllBookingsByStatePAST() {
         List<BookingDtoResponse> resultBookings = bookingService.getBookingByState(bookerId,
                 "PAST",
                 0,
@@ -136,7 +151,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getAllBookingsByStateWAITINGWhenInvokeBookerThenReturnListBookingDto() {
+    void getAllBookingsByStateWAITING() {
         List<BookingDtoResponse> resultBookings = bookingService.getBookingByState(bookerId,
                 "WAITING",
                 0,
@@ -146,7 +161,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getAllBookingsByStateREJECTEDWhenInvokeBookerThenReturnListBookingDto() {
+    void getAllBookingsByStateREJECTED() {
         List<BookingDtoResponse> resultBookings = bookingService.getBookingByState(bookerId,
                 "REJECTED",
                 0,
@@ -156,7 +171,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByStateAndStateALLWhenInvokeThenReturnListBookingDto() {
+    void findAllByStateAndStateALL() {
         List<BookingDtoResponse> resultBookings =
                 bookingService.getBookingByState(ownerId,
                         "ALL",
@@ -166,7 +181,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByItemOwnerAndStateALLWhenInvokeThenReturnListBookingDto() {
+    void findAllByItemOwnerAndStateALL() {
         List<BookingDtoResponse> resultBookings =
                 bookingService.getAllBookings(ownerId,
                         "ALL",
@@ -176,7 +191,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByItemOwnerAndStateCURRENTWhenInvokeThenReturnListBookingDto() {
+    void findAllByItemOwnerAndStateCURRENT() {
         List<BookingDtoResponse> resultBookings = bookingService.getAllBookings(ownerId,
                 "CURRENT",
                 0,
@@ -186,7 +201,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByItemOwnerAndStateFUTUREWhenInvokeThenReturnListBookingDto() {
+    void findAllByItemOwnerAndStateFUTURE() {
         List<BookingDtoResponse> resultBookings = bookingService.getAllBookings(ownerId,
                 "FUTURE",
                 0,
@@ -198,7 +213,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByItemOwnerAndStatePASTWhenInvokeThenReturnListBookingDto() {
+    void findAllByItemOwnerAndStatePAST() {
         List<BookingDtoResponse> resultBookings = bookingService.getAllBookings(ownerId,
                 "PAST",
                 0,
@@ -208,7 +223,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByItemOwnerAndStateWAITINGWhenInvokeThenReturnListBookingDto() {
+    void findAllByItemOwnerAndStateWAITING() {
         List<BookingDtoResponse> resultBookings = bookingService.getAllBookings(ownerId,
                 "WAITING",
                 0,
@@ -218,7 +233,7 @@ public class BookingServiceIntegrationTest {
     }
 
     @Test
-    void findAllByItemOwnerAndStateREJECTEDWhenInvokeThenReturnListBookingDto() {
+    void findAllByItemOwnerAndStateREJECTED() {
         List<BookingDtoResponse> resultBookings = bookingService.getAllBookings(ownerId,
                 "REJECTED",
                 0,
@@ -243,7 +258,7 @@ public class BookingServiceIntegrationTest {
         }
     }
 
-    private void fillItemRepository(List<User> users, List<Item> items) {
+    private void buildItems(List<User> users, List<Item> items) {
         Item item2 = Item.builder()
                 .name("Отвертка")
                 .description("Description")
@@ -270,9 +285,9 @@ public class BookingServiceIntegrationTest {
         }
     }
 
-    private void fillBookingRepository(List<User> users,
-                                       List<Item> items,
-                                       List<Booking> bookings) {
+    private void buildBookings(List<User> users,
+                               List<Item> items,
+                               List<Booking> bookings) {
         LocalDateTime start = LocalDateTime.now();
         Booking booking2 = Booking.builder()
                 .start(start.minusHours(1))
@@ -311,7 +326,6 @@ public class BookingServiceIntegrationTest {
                 .booker(users.get(0))
                 .status(Status.WAITING).build();
         bookings.addAll(List.of(booking2, booking3, booking4, booking5, booking6, booking7));
-
         for (Booking booking : bookings) {
             booking = bookingRepository.save(booking);
         }
