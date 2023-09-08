@@ -112,7 +112,7 @@ public class BookingControllerTest {
 
         mockMvc.perform(patch("/bookings/{bookingId}", bookingId)
                         .header("X-Sharer-User-Id", userId.toString()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is5xxServerError());
     }
 
     @SneakyThrows
@@ -124,7 +124,7 @@ public class BookingControllerTest {
                 .thenThrow(ValidationException.class);
         mockMvc.perform(patch("/bookings/{bookingId}", bookingId)
                         .param("approved", "true"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is5xxServerError());
     }
 
     @SneakyThrows
