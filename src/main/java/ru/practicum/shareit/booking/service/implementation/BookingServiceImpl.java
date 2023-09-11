@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingDtoMapper bookingDtoMapper;
-    private BookingRepository bookingRepository;
-    private ItemRepository itemRepository;
-    private UserRepository userRepository;
-    private UserService userService;
+    private final BookingRepository bookingRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     @Transactional
