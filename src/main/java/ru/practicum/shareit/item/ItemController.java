@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoBC;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemDtoRequest;
+import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.service.interfaces.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -21,19 +22,19 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody Item item, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemDtoResponse createItem(@Valid @RequestBody ItemDtoRequest item, @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Пришел запрос / эндпоинт: '{} {} с телом {} и с заголовком {}'", "POST", "/items", item, userId);
-        ItemDto itemDto = itemService.createItem(item, userId);
+        ItemDtoResponse itemDto = itemService.createItem(item, userId);
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "POST", "/items", itemDto);
         return itemDto;
     }
 
     @PatchMapping("/{id}")
-    public ItemDto updateItem(@PathVariable Long id, @RequestBody ItemDto itemDto,
-                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemDtoResponse updateItem(@PathVariable Long id, @RequestBody ItemDtoResponse itemDto,
+                                      @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Пришел запрос / эндпоинт: '{} {} с телом {} с заголовком {}'",
                 "PATCH", "/items/" + id, itemDto, userId);
-        ItemDto updatedItemDto = itemService.updateItem(id, itemDto, userId);
+        ItemDtoResponse updatedItemDto = itemService.updateItem(id, itemDto, userId);
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "PATCH", "/items", updatedItemDto);
         return updatedItemDto;
     }
@@ -48,19 +49,23 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> getItemBySearch(@RequestParam String text, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemDtoResponse> getItemBySearch(@RequestParam String text, @RequestHeader("X-Sharer-User-Id") Long userId,
+                                                 @RequestParam(defaultValue = "0", required = false) @Min(0) Integer from,
+                                                 @RequestParam(defaultValue = "10", required = false) @Min(1) Integer size) {
         log.info("Получен запрос / эндпоинт: '{} {} с заголовком {} и с параметром {}'",
                 "GET", "/items/search", userId, text);
-        List<ItemDto> matches = itemService.getItemBySearch(text, userId);
+        List<ItemDtoResponse> matches = itemService.getItemBySearch(text, userId, from, size);
         log.info("Получен ответ / эндпоинт: '{} {} с  телом {}'",
                 "GET", "/users/search", matches);
         return matches;
     }
 
     @GetMapping
-    public List<ItemDtoBC> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemDtoBC> getAllItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                       @RequestParam(defaultValue = "0", required = false) @Min(0) Integer from,
+                                       @RequestParam(defaultValue = "10", required = false) @Min(1) Integer size) {
         log.info("Пришел запрос / эндпоинт: '{} {}'", "GET", "/items с заголовком " + userId);
-        List<ItemDtoBC> itemDtoList = itemService.getAllItems(userId);
+        List<ItemDtoBC> itemDtoList = itemService.getAllItems(userId, from, size);
         log.info("Получен ответ / эндпоинт: '{} {}' с телом '{}", "GET", "/items", itemDtoList);
         return itemDtoList;
     }
