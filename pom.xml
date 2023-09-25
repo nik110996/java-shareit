@@ -23,8 +23,8 @@
 	</properties>
 
 	<modules>
-		<module>shareit-gateway</module>
-		<module>shareit-server</module>
+		<module>shareIt-gateway</module>
+		<module>shareIt-server</module>
 	</modules>
 
 	<build>
