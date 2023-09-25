@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 
-
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,13 @@ public class BookingServiceIntegrationTest {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
-
+    private final List<User> users = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
     private Long userId;
     private Long itemId;
     private BookingDtoRequest bookingRequestDto;
     private UserRequestDto userDtoBooker;
-    private final List<User> users = new ArrayList<>();
-    private final List<Item> items = new ArrayList<>();
-    private final List<Booking> bookings = new ArrayList<>();
     private Long bookerId;
     private Long ownerId;
 

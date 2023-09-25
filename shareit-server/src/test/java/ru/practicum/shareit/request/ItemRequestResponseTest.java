@@ -8,8 +8,10 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.request.dto.ItemRequestDtoResponse;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest

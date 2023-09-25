@@ -11,8 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.user.dto.UserRequestDto;
 import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.service.interfaces.UserService;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,13 +60,13 @@ public class UserControllerTest {
         verify(userService).createUser(userRequestDto);
     }
 
-   @SneakyThrows
-   @Test
-   void findByIdWhenInvokeThenInvokeUserService() {
-       mockMvc.perform(get("/users/{userId}", userId))
-               .andExpect(status().isOk());
-       verify(userService).getUser(userId);
-   }
+    @SneakyThrows
+    @Test
+    void findByIdWhenInvokeThenInvokeUserService() {
+        mockMvc.perform(get("/users/{userId}", userId))
+                .andExpect(status().isOk());
+        verify(userService).getUser(userId);
+    }
 
     @SneakyThrows
     @Test
